@@ -151,9 +151,12 @@ class Coupens(viewsets.ViewSet):#Place order
                     return base64.b64encode(token)
 
                 generated_code=secure_rand()
-                coupen_obj = Coupen.objects.get(~Q(coupen_code=generated_code))
+                generated_code=generated_code.decode(encoding="utf-8")
+                print(generated_code)
+                coupen_obj = Coupen.objects.filter(~Q(coupen_code=generated_code))
+                print("============")
                 data=request.data
-                data['coupen_code']=generated_code.decode(encoding="utf-8")
+                data['coupen_code']=generated_code
                 print(data)
                 serializer = CoupenSerializer(data=data)
                 if serializer.is_valid():
