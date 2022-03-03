@@ -161,7 +161,7 @@ class Coupens(viewsets.ViewSet):#Place order
                 serializer = CoupenSerializer(data=data)
                 if serializer.is_valid():
                     serializer.save()
-                    return Response({"Message": "Coupen Code", "Code": generated_code}, status=status.HTTP_404_NOT_FOUND)
+                    return Response({"Message": "Coupen Code", "Code": generated_code}, status=status.HTTP_200_OK)
                 return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
             except :
