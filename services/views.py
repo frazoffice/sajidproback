@@ -122,11 +122,11 @@ class Order_Class(viewsets.ViewSet):#Place order
                             if(coupen_obejct[0].coupen_percentage_price!=None):
                                 dis_per_price=coupen_obejct[0].coupen_percentage_price
                                 calculated_price = calculated_price - (calculated_price * float(dis_per_price) / 100)
-                                return Response({"Service Price": calculated_price})
+                                return Response({"Service Price": calculated_price,"Percentage Discount":dis_per_price})
                             else:
                                 dis_fix_price=coupen_obejct[0].coupen_fixed_price
                                 calculated_price=calculated_price-float(dis_fix_price)
-                                return Response({"Service Price": calculated_price})
+                                return Response({"Service Price": calculated_price,"Fixed Price Discount":dis_fix_price})
                         return Response({"Message": "Invalid Coupen!!"}, status=status.HTTP_404_NOT_FOUND)
                     return Response({"Service Price": calculated_price})
                 else:
