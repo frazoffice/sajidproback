@@ -102,9 +102,16 @@ class Order_Class(viewsets.ViewSet):#Place order
             return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
     @action(detail=False, methods=['get'])
     def all_services(self, request):
-        all_services = Pricing.objects.all()
-        serializer = PricingSerializer(all_services, many=True)
-        return Response({"All Services": serializer.data})
+        test={}
+        for data in Pricing.objects.all().prefetch_related("services_type").distinct():
+            test['type']=data.services_type
+            all_services = Pricing.objects.filter(services_type__services_type_name=data.services_type,services_level__services_level_name="High School").values('deadline')
+            test.update({"days":all_services})
+            # print(all_services)
+            print(test)
+
+        # serializer = PricingSerializer(all_services, many=True)
+        return Response({"All Services": "serializer.data"})
 
     @action(detail=False, methods=['post'])
     def price_calulator(self, request):
@@ -122,13 +129,13 @@ class Order_Class(viewsets.ViewSet):#Place order
                             if(coupen_obejct[0].coupen_percentage_price!=None):
                                 dis_per_price=coupen_obejct[0].coupen_percentage_price
                                 calculated_price = calculated_price - (calculated_price * float(dis_per_price) / 100)
-                                return Response({"Service Price": calculated_price,"Percentage Discount":dis_per_price})
+                                return Response({"Service Price": calculated_price,"Percentage Discount":dis_per_price,"Service ID":service_object[0]})
                             else:
                                 dis_fix_price=coupen_obejct[0].coupen_fixed_price
                                 calculated_price=calculated_price-float(dis_fix_price)
-                                return Response({"Service Price": calculated_price,"Fixed Price Discount":dis_fix_price})
+                                return Response({"Service Price": calculated_price,"Fixed Price Discount":dis_fix_price,"Service ID":service_object[0]})
                         return Response({"Message": "Invalid Coupen!!"}, status=status.HTTP_404_NOT_FOUND)
-                    return Response({"Service Price": calculated_price})
+                    return Response({"Service Price": calculated_price,"Service ID":service_object[0]})
                 else:
 
                     return Response({"Message": "Not Found!!"},status=status.HTTP_404_NOT_FOUND)
