@@ -100,12 +100,13 @@ class Order_Class(viewsets.ViewSet):#Place order
                 serializer.save()
                 return Response({'Message': 'Order Changed Successfully'}, status.HTTP_200_OK)
             return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
-    @action(detail=False, methods=['get'])
+    @action(detail=False, methods=['post'])
     def all_services(self, request):
+        category =request.data['category']
         services={}
         all_service_type=Services_Type.objects.all()
         for data in all_service_type:
-            pricing_object=Pricing.objects.filter(services_type__services_type_name=data,services_level__services_level_name="High School").values('deadline','price')
+            pricing_object=Pricing.objects.filter(services_type__services_type_name=data,services_level__services_level_name=category).values('deadline','price')
             services[data.services_type_name]=list(pricing_object)
         pp_json = json.dumps(services)
         loaded_r = json.loads(pp_json)
