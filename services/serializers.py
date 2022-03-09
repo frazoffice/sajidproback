@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-
+from rest_framework.response import Response
 from core.models import User_Profile
 from rest_framework import serializers
 
@@ -61,3 +61,18 @@ class CoupenSerializer(serializers.ModelSerializer):
     class Meta:
         model=Coupen
         fields= "__all__"
+
+
+class ServicesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Pricing
+        fields= "__all__"
+
+    def create(self, request, *args, **kwargs):
+        # serializer = self.get_serializer(data=request.data)
+        # serializer.is_valid(raise_exception=True)
+        # self.perform_create(serializer)
+        # headers = self.get_success_headers(serializer.data)
+        return Response({"Success": "msb blablabla"})
+
+
