@@ -112,6 +112,32 @@ class Order_Class(viewsets.ViewSet):#Place order
         loaded_r = json.loads(pp_json)
         return Response({"All Services": loaded_r})
 
+    @action(detail=False, methods=['get'])
+    def specific_user_oders(self, request):
+        try:
+            user_obj = User.objects.get(id=request.user.id)
+        except User.DoesNotExist:
+            return Response({"Message": "User does not exist"}, status=status.HTTP_404_NOT_FOUND)
+        oder_data=Order.objects.filter(user=user_obj)
+        serializer = OrderSerializer(oder_data, many=True)
+        return Response({"AllProfiles": serializer.data})
+
+
+
+    @action(detail=False, methods=['patch'])
+    def upload_media_coordinator(self, request):
+        if request.method == "PATCH":
+            try:
+                order_obj = Order.objects.get(id=request.data['id'])
+            except Order.DoesNotExist:
+                return Response({"Message": "Order does not exist"}, status=status.HTTP_404_NOT_FOUND)
+
+            serializer = ChangeOrderStatusSerializer(order_obj, data=request.data,partial=True)  # set partial=True to update a data partially
+            if serializer.is_valid():
+                serializer.save()
+                return Response({'Message': 'Upload Media file Successfully'}, status.HTTP_200_OK)
+            return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
     @action(detail=False, methods=['post'])
     def price_calulator(self, request):
         if request.method == "POST":
@@ -193,8 +219,47 @@ class Coupens(viewsets.ViewSet):#Place order
                 return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 
+class Support_Coordinator(viewsets.ViewSet):
+    @action(detail=False,methods=['post','patch','get'])
+    def support_coordinator(self, request):
+        if request.method == "POST":
+            try:
+                user_obj = User.objects.get(id=request.user.id)
+            except User.DoesNotExist:
+                return Response({"Message": "User does not exist"}, status=status.HTTP_404_NOT_FOUND)
+            data={
+                'user':user_obj.id,
+                'phone':request.data['phone']
+            }
+            serializer = SupportSerializer(data=data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response({'Message': 'Successfully!'}, status.HTTP_200_OK)
+            else:
+                return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
+        if request.method == "PATCH":
+            try:
+                user_obj = User.objects.get(id=request.user.id)
+                sup_obj=Support.objects.get(user=user_obj.id)
+            except User.DoesNotExist:
+                return Response({"Message": "User does not exist"}, status=status.HTTP_404_NOT_FOUND)
 
+            serializer = SupportSerializer(sup_obj, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response({'Message': 'Update status Successfully!'}, status.HTTP_200_OK)
+            else:
+                return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+        if request.method == "GET":
+            try:
+                user_obj = User.objects.get(id=request.user.id)
+                sup_obj = Support.objects.get(user=user_obj.id)
+            except User.DoesNotExist:
+                return Response({"Message": "User does not exist"}, status=status.HTTP_404_NOT_FOUND)
+            sup_obj = Support.objects.get(user=user_obj.id)
+            serializer = SupportSerializer(sup_obj)
+            return Response({"Support Coordinator": serializer.data})
 
 
 

@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from core.models import User_Profile
 from rest_framework import serializers
 
-from services.models import Order, Pricing, Paper_type, Services_Level, Services_Type, Coupen
+from services.models import Order, Pricing, Paper_type, Services_Level, Services_Type, Coupen, Support
 
 
 class ServicesLevelSerializer(serializers.ModelSerializer):
@@ -37,7 +37,7 @@ class OrderSerializer(serializers.ModelSerializer):
     pricing = PricingSerializer()
     class Meta:
         model=Order
-        fields= ["order_price","media_file","topic","deadline","description","total_price","order_status","is_active","topic","total_pages","actual_price","pricing"]
+        fields= ["order_price","media_file","topic","deadline","description","total_price","order_status","is_active","topic","total_pages","actual_price","pricing","media_file_coordinator"]
         # fields= "__all__"
         # extra_field=["services_type"]
 
@@ -76,3 +76,7 @@ class ServicesSerializer(serializers.ModelSerializer):
         return Response({"Success": "msb blablabla"})
 
 
+class SupportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Support
+        fields= "__all__"
