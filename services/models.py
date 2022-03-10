@@ -7,6 +7,9 @@ from django.db import models
 
 
 # Create your models here.
+from core.models import User_Profile
+
+
 class Services_Type(models.Model):
     services_type_name = models.CharField(max_length=255)
     is_active = models.BooleanField(default=True)
@@ -75,6 +78,7 @@ class Order(models.Model):
     is_active = models.BooleanField(default=True)
     created_date = models.DateTimeField(auto_now_add=True)
     modified_date = models.DateTimeField(auto_now=True)
+    media_file_coordinator=models.FileField(upload_to='media/coordinator_mediafile')
     def __str__(self):
         return str(self.topic)
 
@@ -88,3 +92,15 @@ class Coupen(models.Model):
     modified_date = models.DateTimeField(auto_now=True)
     def __str__(self):
         return str(self.coupen_name)
+
+
+class Support(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, default='0')
+    online_status = models.BooleanField(default=False)
+    phone=models.CharField(max_length=255)
+    is_active = models.BooleanField(default=True)
+    created_date = models.DateTimeField(auto_now_add=True)
+    modified_date = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return str(self.user)
