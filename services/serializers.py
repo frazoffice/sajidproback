@@ -37,7 +37,7 @@ class OrderSerializer(serializers.ModelSerializer):
     pricing = PricingSerializer()
     class Meta:
         model=Order
-        fields= ["order_price","media_file","topic","deadline","description","total_price","order_status","is_active","topic","total_pages","actual_price","pricing","media_file_coordinator"]
+        fields= ["id","order_price","media_file","topic","deadline","description","total_price","order_status","is_active","topic","total_pages","actual_price","pricing","media_file_coordinator"]
         # fields= "__all__"
         # extra_field=["services_type"]
 
