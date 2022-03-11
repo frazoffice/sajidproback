@@ -192,3 +192,15 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtppro.zoho.com'
+EMAIL_USE_SSL = False    # use port 465
+EMAIL_USE_TLS = True    # use port 587
+EMAIL_PORT = 587 # OR 465
+EMAIL_HOST_USER = 'no-reply@metaassignmenthelp.com'
+EMAIL_HOST_PASSWORD = 'Wackius122.'
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+
