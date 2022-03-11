@@ -13,8 +13,7 @@ from .views import *
 
 router=routers.DefaultRouter()
 router.register(r'user_profile', User_Profiles, 'User')#get auth user infoSSS
-router.register(r'password', password, 'Password')#get auth user infoSSS
-router.register(r'homescreen', homescreen, 'Homescreen')
+
 # router.register(r'like_and_dislike', FRAZ, 'like_and_dislike')
 urlpatterns=[
     path('', include(router.urls)),

@@ -17,7 +17,7 @@ def generateOTP():
 
     # length of password can be chaged
     # by changing value in range
-    for i in range(4):
+    for i in range(10):
         OTP += digits[math.floor(random.random() * 10)]
 
     return OTP

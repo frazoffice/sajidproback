@@ -23,6 +23,7 @@ class User_Profile(models.Model):
     location=models.CharField(max_length=255,blank=True)
     phone=models.CharField(max_length=255,blank=True)
     role = models.CharField(max_length=1, choices=ROLE_CHOICES, default='C')
+    verfication_code=models.CharField(max_length=255, blank=True, default='')
     verfication_status = models.BooleanField(default=False)
     registration_status = models.BooleanField(default=False, blank=True)
     user_deactive_status=models.CharField(max_length=255, blank=True, default='')
