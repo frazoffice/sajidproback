@@ -262,8 +262,38 @@ class Support_Coordinator(viewsets.ViewSet):
             return Response({"Support Coordinator": serializer.data})
 
 
+class Payments(viewsets.ViewSet):
+    @action(detail=False,methods=['post'])
+    def create_payment(self, request):
+        # print(request.data['idempotency_key'])
+        headers = {
+            'Content-type': 'application/json',
+            'Authorization': 'Bearer '+request.data['token'],
+            'Square-Version': '2019-08-14'
 
+        }
 
+        # data ={
+        #         "idempotency_key": request.data['idempotency_key'],
+        #         "amount_money": {
+        #             "amount": request.data['amount'],
+        #             "currency": request.data['currency']
+        #         },
+        #         "source_id": request.data['source_id']
+        #
+        #     }
+
+        data={
+    "idempotency_key": request.data['idempotency_key'],
+    "amount_money": {
+      "amount": int(request.data['amount']),
+      "currency": request.data['currency']
+    },
+    "source_id": request.data['source_id']
+
+}
+        response = requests.post('https://connect.squareupsandbox.com/v2/payments', headers=headers, data=str(data))
+        return Response(response.json())
 
 
 
