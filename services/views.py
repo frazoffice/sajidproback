@@ -254,11 +254,10 @@ class Support_Coordinator(viewsets.ViewSet):
         if request.method == "GET":
             try:
                 user_obj = User.objects.get(id=request.user.id)
-                sup_obj = Support.objects.get(user=user_obj.id)
             except User.DoesNotExist:
                 return Response({"Message": "User does not exist"}, status=status.HTTP_404_NOT_FOUND)
-            sup_obj = Support.objects.get(user=user_obj.id)
-            serializer = SupportSerializer(sup_obj)
+            sup_obj = Support.objects.filter(online_status=True)
+            serializer = SupportSerializer(sup_obj,many=True)
             return Response({"Support Coordinator": serializer.data})
 
 
