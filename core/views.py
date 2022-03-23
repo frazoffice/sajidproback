@@ -1,3 +1,5 @@
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 import random
 import re
 import string
@@ -149,6 +151,9 @@ class User_Profiles(viewsets.ViewSet):#User class
     # }
 
 
+
+
+
     @action(detail=False, methods=['post','put'])
     def signup(self,request):#user_login
         if request.method=="POST":
@@ -200,3 +205,17 @@ class User_Profiles(viewsets.ViewSet):#User class
                 return Response({'Message': 'Status Updated'}, status=status.HTTP_200_OK)
             else:
                 return Response({"Message": "Code does not exist"}, status=status.HTTP_404_NOT_FOUND)
+
+    @action(detail=False, methods=['post'])
+    def contact_us(self, request):  # user_login
+        if request.method=="POST":
+            try:
+                send_mail(requests.data["subject"],
+                          requests.data["message"],
+                          'no-reply@metaassignmenthelp.com',
+                          ['frazmirzaoffice58@gmail.com'],
+                          fail_silently=False)
+            except:
+                return Response({"Message": "Error!!"}, status=status.HTTP_404_NOT_FOUND)
+
+
