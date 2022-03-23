@@ -1,42 +1,34 @@
-# from square.client import Client
-# from cachecontrol import CacheControl
-# from deprecation import deprecated
-# client = Client(
-#     square_version='2022-02-16',)
-#
-# locations_api = client.locations
-# result = locations_api.list_locations()
-#
-# if result.is_success():
-#     print(result.body)
-# elif result.is_error():
-#     print(result.errors)
-#
-#
+import stripe
 
+SECRET_KEY = "sk_test_51KgS9FE4k21uIFp3L7zSMYNk6viikCXl4MzIJgBceMXbxay08a34Q0kI5YzxWieTiIEtrVmcYElEEYnVSRIDmhRS00AFRm8VaP"
 
+stripe.api_key=SECRET_KEY
 
+def generate_card_token(cardnumber,expmonth,expyear,cvv):
+    data= stripe.Token.create(
+            card={
+                "number": str(cardnumber),
+                "exp_month": int(expmonth),
+                "exp_year": int(expyear),
+                "cvc": str(cvv),
+            })
+    card_token = data['id']
 
-import requests
+    return card_token
 
-headers = {
-    'Content-type': 'application/json',
-    'Authorization': 'Bearer EAAAEIH7NTX39rv-7k7Q_B1kHxTlCudg9qgjz_DLgpfWjYVjsQ-wH2VNIiTpVnbf',
-    'Square-Version': '2019-08-14'
+token=generate_card_token("4242 4242 4242 4242","12","34","567")
 
-}
+def create_payment_charge(tokenid,amount):
 
-data = """{
-    "idempotency_key": "57d92322-d11e-48d6-be84-12072829db14",
-    "amount_money": {
-      "amount": 2000,
-      "currency": "USD"
-    },
-    "source_id": "cnon:card-nonce-ok"
+    payment = stripe.Charge.create(
+        amount= int(amount)*100,                  # convert amount to cents
+        currency='usd',
+        description='Example charge',
+        source=tokenid,
+    )
 
-}"""
-print(type(data))
-response = requests.post('https://connect.squareupsandbox.com/v2/payments', headers=headers, data=data)
+    payment_check = payment['paid']    # return True for successfull payment
 
-
-print(response.json())
+    return payment_check
+data=create_payment_charge(token,1000)
+print(data)

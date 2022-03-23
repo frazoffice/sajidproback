@@ -53,6 +53,7 @@ from rest_framework.response import Response
 
 import core
 # from .serializers import *
+from .functions import generate_card_token, create_payment_charge
 from .models import Coupen
 from .serializers import *
 from rest_framework import status, viewsets, mixins, generics, response
@@ -265,35 +266,19 @@ class Support_Coordinator(viewsets.ViewSet):
 class Payments(viewsets.ViewSet):
     @action(detail=False,methods=['post'])
     def create_payment(self, request):
-        # print(request.data['idempotency_key'])
-        headers = {
-            'Content-type': 'application/json',
-            'Authorization': 'Bearer '+request.data['token'],
-            'Square-Version': '2019-08-14'
+        card_number=request.data['card_number']
+        exp_month=request.data['exp_month']
+        exp_year=request.data['exp_year']
+        cvv=request.data['cvv']
+        amount=request.data['amount']
 
-        }
-
-        # data ={
-        #         "idempotency_key": request.data['idempotency_key'],
-        #         "amount_money": {
-        #             "amount": request.data['amount'],
-        #             "currency": request.data['currency']
-        #         },
-        #         "source_id": request.data['source_id']
-        #
-        #     }
-
-        data={
-    "idempotency_key": request.data['idempotency_key'],
-    "amount_money": {
-      "amount": int(request.data['amount']),
-      "currency": request.data['currency']
-    },
-    "source_id": request.data['source_id']
-
-}
-        response = requests.post('https://connect.squareupsandbox.com/v2/payments', headers=headers, data=str(data))
-        return Response(response.json())
+        token = generate_card_token(card_number,exp_month,exp_year,cvv)
+        if token==False:
+            return Response({"Message": "Invalid Card Details!"}, status=status.HTTP_404_NOT_FOUND)
+        data = create_payment_charge(token, amount)
+        if data is True:
+            return Response({"Message": "Payment deducted from your account"}, status=status.HTTP_200_OK)
+        return Response({"Message": "Error try again"}, status=status.HTTP_404_NOT_FOUND)
 
 
 
