@@ -53,6 +53,7 @@ from rest_framework.response import Response
 
 import core
 # from .serializers import *
+from .functions import generate_card_token, create_payment_charge
 from .models import Coupen
 from .serializers import *
 from rest_framework import status, viewsets, mixins, generics, response
@@ -261,8 +262,22 @@ class Support_Coordinator(viewsets.ViewSet):
             return Response({"Support Coordinator": serializer.data})
 
 
+class Payments(viewsets.ViewSet):
+    @action(detail=False,methods=['post'])
+    def create_payment(self, request):
+        card_number=request.data['card_number']
+        exp_month=request.data['exp_month']
+        exp_year=request.data['exp_year']
+        cvv=request.data['cvv']
+        amount=request.data['amount']
 
-
+        token = generate_card_token(card_number,exp_month,exp_year,cvv)
+        if token==False:
+            return Response({"Message": "Invalid Card Details!"}, status=status.HTTP_404_NOT_FOUND)
+        data = create_payment_charge(token, amount)
+        if data is True:
+            return Response({"Message": "Payment deducted from your account"}, status=status.HTTP_200_OK)
+        return Response({"Message": "Error try again"}, status=status.HTTP_404_NOT_FOUND)
 
 
 
