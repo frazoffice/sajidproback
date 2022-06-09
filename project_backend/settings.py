@@ -139,10 +139,10 @@ WSGI_APPLICATION = 'project_backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'backend_project',
-        'USER': 'postgres',
+        'NAME': 'django',
+        'USER': 'django',
         'port':'5432',
-        'PASSWORD': 'admin12345',                                # Not used with sqlite3.
+        'PASSWORD': 'django',                                # Not used with sqlite3.
         'HOST': 'localhost',                                  # Set to empty string for localhost. Not used with sqlite3.
                                    # Set to empty string for default. Not used with sqlite3.
     }

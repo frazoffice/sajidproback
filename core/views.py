@@ -187,7 +187,7 @@ class User_Profiles(viewsets.ViewSet):#User class
                         otp={
                             'otp':v_code
                         }
-                        emailsending(otp, 'Activation_Email.html', email, 'Email Confirmation')
+                        # emailsending(otp, 'Activation_Email.html', email, 'Email Confirmation')
                         return Response({'Message': 'Successfully'}, status.HTTP_200_OK)
                     else:
                         print(serializer.errors)
